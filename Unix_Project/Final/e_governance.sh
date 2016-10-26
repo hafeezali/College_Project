@@ -6,8 +6,7 @@ zenity --info \
 	--text="Welcome to the E-governance System!" \
 	--width=300 \
 	--height=100 \
-	--timeout=5 \
-
+	--timeout=5 
 #initially input = 1 to start the loop
 input=1
 while [ $input -ne 4 ]
@@ -16,6 +15,7 @@ do
 	#The option chosen is stored in the variable input
 	input=$(zenity --list \
 		--title="Menu:" \
+		--text="Choose an Option:" \
 		--column="Choise" \
 		--column="Description" \
 		1 Add \
@@ -26,8 +26,6 @@ do
 	if [ $? -eq 1 ]
 	then
 		input=0
-		zenity --error \
-			--text="Select option 4 to exit ! :)"
 	fi
 	case $input in
 		1)
@@ -52,46 +50,79 @@ do
 
 			case $? in
 				0) 
-					echo "Member added!"
 					flag=0
        					while [ $flag == 0 ]
        					do
 						#$RANDOM function generates a random number which ranges from 0 to 32,767
-     				        	id=$(echo "$RANDOM+1" | bc) 
-  				                echo $id
+     				        	id=$(echo "$RANDOM+1" | bc)
+						#count is used to check if the generated id is already present in the file
  				                count=$(cut -d \| -f 1 id_file | grep $id |wc -l)
-						echo $count
                 		 		if [ $count == 0 ]
                					then
                 			        	flag=1
              					fi
         				done
-					echo "Member id : $id"
+					echo $id >> id_file
+					zenity --info \
+						--title="Member added!" \
+						--text="Member I.D. : $id" \
+						--width=300 \
+						--height=100 \
+						--timeout=5
 					;;
 				1)
-					echo "No Member added!"
+					zenity --warning \
+						--title="WARNING!" \
+						--text="No member was added!" \
+						--timeout=5
 					;;
 				-1)
-					echo "An error has occurred!"
+					zenity --error \
+						--title="ERROR!" \
+						--text="An unexpected error has occurred!" \
+						--timeout=5
 					;;
 			esac
 			;;
 		2)
+			#deleting the older file if it exists
+			for FILE in *
+			do
+				if [ $FILE == id_name.csv ]
+				then
+					rm id_name.csv
+				fi
+			done
 			cut -d \| -f 1 file.txt | paste id_file - >> id_name.csv
-			zenity --list \
-				--title="Delete Member" \
-				--text="Choose the member whose data must be deleted:" \
-				--column="I.D." \
-				--column="Name" \
-				$(tr '\n\t' '  ' < id_name.csv)
+			id=$(zenity --list \
+					--title="Delete Member" \
+					--text="Choose the member whose data must be deleted:" \
+					--column="I.D." \
+					--column="Name" \
+					$(tr '\n\t' '  ' < id_name.csv))
+			x=$(zenity --question \
+					--title="WARNING!" \
+					--text="Are you sure you want to delete details of the member whose I.D. is $id" \
+					--width=300 \
+					--height=100 \
+					--timeout=5)
+			if
 			;;
 		3)
 			;;
 		4)
-			echo "BYE!"
+			zenity --info \
+				--title="Bye!" \
+				--text="Thank You for using the E-governance system" \
+				--width=300 \
+				--height=100 \
+				--timeout=5
 			;;
 		*)
-			echo "An error has occured!"
+			zenity --error \
+				--title="ERROR!" \
+				--text="Select option 4 to exit!" \
+				--timeout=5
 			;;
 	esac
 done
