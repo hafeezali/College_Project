@@ -190,7 +190,7 @@ do
 			disp_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
 			tput clear
 			draw_line
-			name=$(
+			#name=$(
 			printf "Name: "
 			draw_line	
 			;;
