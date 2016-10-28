@@ -1,5 +1,32 @@
 #!/bin/bash
 
+#function to draw a line
+draw_line() {
+	for((i=0;i<50;i++))
+	do
+		printf "-"
+	done
+	printf "\n"
+}
+
+#function to delete the older file if it exists
+del_disp_sel() {
+	for FILE in *
+	do
+		if [ $FILE == id_name.csv ]
+		then
+			rm id_name.csv
+		fi
+	done
+	cut -d \| -f 1 file.txt | paste id_file - >> id_name.csv
+	id=$(zenity --list \
+			--title="Delete Member" \
+			--text="Choose the member whose data must be deleted:" \
+			--column="I.D." \
+			--column="Name" \
+			$(tr '\n\t' '  ' < id_name.csv))
+}
+
 #Welcome Dialog
 zenity --info \
 	--title="E-governance" \
@@ -7,6 +34,7 @@ zenity --info \
 	--width=300 \
 	--height=100 \
 	--timeout=5 
+
 #initially input = 1 to start the loop
 input=1
 while [ $input -ne 4 ]
@@ -87,20 +115,21 @@ do
 			;;
 		2)
 			#deleting the older file if it exists
-			for FILE in *
-			do
-				if [ $FILE == id_name.csv ]
-				then
-					rm id_name.csv
-				fi
-			done
-			cut -d \| -f 1 file.txt | paste id_file - >> id_name.csv
-			id=$(zenity --list \
-					--title="Delete Member" \
-					--text="Choose the member whose data must be deleted:" \
-					--column="I.D." \
-					--column="Name" \
-					$(tr '\n\t' '  ' < id_name.csv))
+			#for FILE in *
+			#do
+			#	if [ $FILE == id_name.csv ]
+			#	then
+			#		rm id_name.csv
+			#	fi
+			#done
+			#cut -d \| -f 1 file.txt | paste id_file - >> id_name.csv
+			#id=$(zenity --list \
+			#		--title="Delete Member" \
+			#		--text="Choose the member whose data must be deleted:" \
+			#		--column="I.D." \
+			#		--column="Name" \
+			#		$(tr '\n\t' '  ' < id_name.csv))
+			del_disp_sel
 			if [ $? == 0 ]
 			then
 				zenity --question \
@@ -157,7 +186,13 @@ do
 			fi
 			;;
 		3)
-				
+			del_disp_sel
+			disp_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
+			tput clear
+			draw_line
+			name=$(
+			printf "Name: "
+			draw_line	
 			;;
 		4)
 			zenity --info \
@@ -174,6 +209,8 @@ do
 				--width=300 \
 				--height=100 \
 				--timeout=5
+			#if no option is selected then white space is stored in input
+			input=0
 			;;
 	esac
 done
