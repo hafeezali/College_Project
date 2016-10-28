@@ -23,6 +23,7 @@ do
 		3 Display \
 		4 Exit )
 	#If cancel is pressed then the zenity command returns 1
+	#$? has the last status code of a command
 	if [ $? -eq 1 ]
 	then
 		input=0
@@ -100,15 +101,63 @@ do
 					--column="I.D." \
 					--column="Name" \
 					$(tr '\n\t' '  ' < id_name.csv))
-			x=$(zenity --question \
+			if [ $? == 0 ]
+			then
+				zenity --question \
 					--title="WARNING!" \
 					--text="Are you sure you want to delete details of the member whose I.D. is $id" \
 					--width=300 \
 					--height=100 \
-					--timeout=5)
-			if
+					--timeout=5
+				#$?=1 if replied no to the above question and $?=0 if replied yes
+				if [ $? == 0 ]
+				then
+					#del_line is the line number to be deleted
+					del_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
+					#'$del_line d' won't work since we're trying to retrieve the value of del_line inside(' ' cancels the special behaviour of $)
+					sed -i "$del_line d" id_file
+					sed -i "$del_line d" file.txt
+					zenity --info \
+						--title="DELETED!" \
+						--text="Member data deleted from the database!" \
+						--width=300 \
+						--height=100 \
+						--timeout=5
+				elif [ $? == 1 ]
+				then
+					zenity --info \
+						--title="INFORMATION!" \
+						--text="Member data of $id not deleted" \
+						--width=300 \
+						--height=100 \
+						--timeout=5
+				else
+					zenity --error \
+						--title="ERROR!" \
+						--text="An error has occured!" \
+						--width=300 \
+						--height=100 \
+						--timeout=5
+				fi
+			elif [ $? == 1 ]
+			then
+				zenity --error \
+					--title="ERROR!" \
+					--text="No member selected!" \
+					--width=300 \
+					--height=100 \
+					--timeout=5
+			else
+				zenity --error \
+					--title="ERROR!" \
+					--text="An error has occurred!" \
+					--width=300 \
+					--height=100 \
+					--timeout=5
+			fi
 			;;
 		3)
+				
 			;;
 		4)
 			zenity --info \
@@ -121,7 +170,9 @@ do
 		*)
 			zenity --error \
 				--title="ERROR!" \
-				--text="Select option 4 to exit!" \
+				--text="No option selected!" \
+				--width=300 \
+				--height=100 \
 				--timeout=5
 			;;
 	esac
