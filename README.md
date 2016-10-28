@@ -1,2 +1,2 @@
 # College_Project
-DSA and UNIX projects
+Repository for college projects
