@@ -1,5 +1,5 @@
-Hafeez|Ali|Anees Ali|Khyrunnisa|hafeez.ali5@gmail.com|Bangalore|Indian|7406229950|B+|Tuesday 30 December 1997
-Rahul|Mogambo|RahulFather|RahulMother|Rahul@rahul.com|Bangalore|Indian|1234567890|A+|Wednesday 09 November 2016
-Aditya|Jayasimha|AdityaFather|AdityaMother|Aditya@aditya.com|Bangalore|Indian|6758490321|B-|Saturday 03 December 2016
-Sanjay|Sanj|SanjayFather|SanjayMother|Sanjay@Sanjay.com|Bangalore|Indian|5674893021|O+|Sunday 30 October 2016
-Sharath|Savasere|SharathFather|SharathMother|Sharath@Shartah.com|Bangalore|Indian|8907651423|A-|Monday 28 November 2016
+Hafeez|Ali|Anees Ali|Khyrunnisa|hafeez.ali5@gmail.com|Bangalore|Indian|7406229950|B+|30/12/1997
+Rahul|Mogambo|RahulFather|RahulMother|Rahul@rahul.com|Bangalore|Indian|1234567890|A+|03/11/97
+Aditya|Jayasimha|AdityaFather|AdityaMother|Aditya@aditya.com|Bangalore|Indian|6758490321|B-|25/08/97
+Sanjay|Sanj|SanjayFather|SanjayMother|Sanjay@Sanjay.com|Bangalore|Indian|5674893021|O+|23/07/97
+Sharath|Savasere|SharathFather|SharathMother|Sharath@Shartah.com|Bangalore|Indian|8907651423|A-|28/11/97

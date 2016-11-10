@@ -1,6 +1,15 @@
 #!/bin/bash
 
-#function to delete the older file if it exists and creating the updated file
+#function to draw a line
+draw_line() {
+	for((i=0;i<50;i++))
+	do
+		printf "-"
+	done
+	printf "\n"
+}
+
+#function to delete the older file if it exists
 del_disp_sel() {
 	for FILE in *
 	do
@@ -22,33 +31,33 @@ zenity --info \
 
 #initially input = 1 to start the loop
 input=1
-while [ $input -ne 5 ]
+while [ $input -ne 6 ]
 do
 	#Menu Dialog
 	#The option chosen is stored in the variable input
 	input=$(zenity --list \
 		--title="Menu:" \
 		--text="Choose an Option:" \
-		--column="Choice" \
+		--column="Choise" \
 		--column="Description" \
 		1 Add \
 		2 Delete \
 		3 Display \
-		4 Tasks \
-		5 Exit )
+		4 Modify \
+		5 Tasks \
+		6 Exit )
 	#If cancel is pressed then the zenity command returns 1
 	#$? has the last status code of a command
 	if [ $? -eq 1 ]
 	then
-		#making input=0 in order to prevent error while checking condition back in the while loop
 		input=0
 	fi
 	case $input in
 		1)
-			#Form to read information about the member
 			zenity --forms --title="Add Member" \
 				--text="Enter information about the member:" \
 				--separator="|" \
+##
 				--forms-date-format="%d/%m/%y" \
 				--add-entry="First Name:" \
 				--add-entry="Last Name:" \
@@ -60,25 +69,22 @@ do
 				--add-entry="Phone number: +91" \
 				--add-entry="Blood Group:" \
 				--add-calendar="Date-of-birth:" >> file.txt
-			#checking the exit status of the form command
+
 			case $? in
 				0) 
 					flag=0
        		while [ $flag == 0 ]
      			do
-						#$RANDOM function generates a random number which ranges from 0 to 32,767
+					#$RANDOM function generates a random number which ranges from 0 to 32,767
 	        	id=$(echo "$RANDOM+1" | bc)
 	 					#count is used to check if the generated id is already present in the file
  			      count=$(cut -d \| -f 1 id_file | grep $id | wc -l)
      		 		if [ $count == 0 ]
             then
-            	#flag set to 1 so as to end the while loop
             	flag=1
    					fi
        		done
-       		#adding the id to the id_file
 					echo $id >> id_file
-					#retrieving the name of the member
 					num=$(grep -n $id id_file | cut -d : -f1)
 					name=$(sed -n ""$num"p" file.txt | cut -d \| -f2 )
 					zenity --info \
@@ -87,7 +93,6 @@ do
 						--width=300 \
 						--height=100 \
 						--timeout=5
-					#Making the Member folder which holds the various tasks to be done by the member
 					mkdir "$id $name"
 					;;
 				1)
@@ -106,15 +111,13 @@ do
 			;;
 		2)
 			del_disp_sel
-			#Taking the input for id
 			id=$(zenity --list \
 				--title="Delete Member" \
 				--text="Choose the member whose data must be deleted:" \
 				--column="I.D." \
 				--column="Name" \
 				$(tr '\n\t' '  ' < id_name.csv))
-			#checking the exit status of the command
-			if [ $? == 0 -a ${#id} -ne 0 ]
+			if [ $? == 0 ]
 			then
 				zenity --question \
 					--title="WARNING!" \
@@ -127,7 +130,7 @@ do
 				then
 					#del_line is the line number to be deleted
 					del_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
-					#Deleting the details of the member from the files
+					#'$del_line d' won't work since we're trying to retrieve the value of del_line inside(' ' cancels the special behaviour of $)
 					sed -i "$del_line d" id_file
 					sed -i "$del_line d" file.txt
 					zenity --info \
@@ -136,8 +139,7 @@ do
 						--width=300 \
 						--height=100 \
 						--timeout=5
-					#Deleting the corresponding folder containing the details of the tasks of the member
-					rm -rf $id*
+					rmdir $id*
 				elif [ $? == 1 ]
 				then
 					zenity --info \
@@ -172,77 +174,65 @@ do
 			fi
 			;;
 		3)
+##
 			del_disp_sel
-			#Reading value for id
 			id=$(zenity --list \
 			--title="Select Member" \
 			--text="Choose the member you want to select:" \
 			--column="I.D." \
 			--column="Name" \
 			$(tr '\n\t' '  ' < id_name.csv))
-			if [ $? -eq 0 -a ${#id} -ne 0 ]
-			then
-				#Selecting the corresponding line in the file, and displaying it in a proper format
-				disp_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
-				head -$disp_line file.txt | tail -1 | tr '| ' '\n_' > templist
-				paste -d '\t' attributefile templist > templist1
-				zenity --list \
-					--title="Member Details" \
-					--width=500 \
-					--height=400 \
-					--column="Attributes" \
-					--column="Values" \
-					$(tr '\n\t' ' ' < templist1)
-			else
-				zenity --error \
-					--title="ERROR!" \
-					--text="An error has occurred!" \
-					--width=300 \
-					--height=100 \
-					--timeout=5
-			fi	
+			disp_line=$(cut -d \| -f 1 id_file | grep -n $id | cut -d : -f1)
+			head -$disp_line file.txt | tail -1 | tr '| ' '\n_' > templist
+			paste -d '\t' attributefile templist > templist1
+			zenity --list \
+				--title="Member Details" \
+				--column="Attributes" \
+				--column="Values" \
+				$(tr '\n\t' ' ' < templist1)
+			#tput clear
+			#draw_line
+			#name=$(
+			#printf "Name: "
+			#draw_line	
 			;;
-		4)
+		4)	
+			
+			;;
+		5)
 			task_input=1
 			while [ $task_input -ne 4 ]
 			do
-				#Taking input for task_input variable
 				task_input=$(zenity --list \
 					--title="Tasks Menu:" \
 					--text="Choose an Option:" \
-					--column="Choice" \
+					--column="Choise" \
 					--column="Description" \
 					1 Load \
 					2 Search \
 					3 List \
 					4 Exit )
-				#Checking the exit status of the command
 				if [ $? -eq 1 ]
 				then
-					#task_input set to zero so as not break the while loop
 					task_input=0
 				fi
 				case $task_input in
 					1)
 						flag=0
 						del_disp_sel
-						#Taking input for loading the tasks of a member
 						id=$(zenity --list \
 							--title="Load Member" \
 							--text="Choose the member whose tasks must be updated:" \
 							--column="I.D." \
 							--column="Name" \
 							$(tr '\n\t' '  ' < id_name.csv))
-						#Checking the exit status of the previous command
 						if [ $? -eq 0 -a ${#id} -ne 0 ]
 						then
-							#Moving into the corresponding folder
 							cd $id*
 							flag=1
 							task_load_input=1
-							while [ $task_load_input -ne 7 ]
+							while [ $task_load_input -ne 6 ]
 							do
-								#Reading input for task_load_input
 								task_load_input=$(zenity --list \
 									--title="Tasks Load Menu:" \
 									--text="Choose an option:" \
@@ -253,24 +243,19 @@ do
 									3 Remove_task \
 									4 List \
 									5 Search \
-									6 Display \
-									7 Go_back )
-								#Checking the exit status
+									6 Go_back )
 								if [ $? -eq 1 ]
 								then
 									task_load_input=0
 								fi
 								case $task_load_input in
 									1)
-										#Reading input for task name
 										name=$(zenity --entry \
 											--title="Add New Task" \
 											--text="Enter Task Name:" \
 											--width="300" )
-										#Checking exit status of the previous command
-										if [ $? -eq 0 -a ${#name} -ne 0 ]
+										if [ $? -eq 0 -a ${#name} -eq 0 ]
 										then
-											#Form for Task info
 											zenity --forms \
 												--title="$name" \
 												--text="Enter information about the task:" \
@@ -280,7 +265,6 @@ do
 												--add-entry="Status:" \
 												--add-entry="Priority:" \
 												--add-calendar="Due Date:" >> $name.txt
-											#Checking the exit status
 											case $? in
 												0) 
 													zenity --info \
@@ -313,23 +297,19 @@ do
 										fi
 										;;
 									2)
-										#Taking input for name
 										name=$(zenity --entry \
 											--title="Edit" \
 											--text="Enter Task Name:" \
-											--width=300 \
-											--height=100 )
-										#Checking exit status of previous command
+											--width="300" \
+											--height="300" )
 										if [ $? -eq 0 -a ${#name} -ne 0 ]
 										then
-											#Checking if task exists
 											ls $name.txt
 											if [ $? -eq 0 ]
 											then
 												task_edit_input=1
 												while [ $task_edit_input -ne 6 ]
 												do
-													#Reading input for task_edit_input
 													task_edit_input=$(zenity --list \
 														--title="Tasks Edit Menu:" \
 														--text="Choose an option:" \
@@ -341,31 +321,27 @@ do
 														4 Edit_Priority \
 														5 Edit_Due_Date \
 														6 Go_back )
-													#Checking the exit status of the previous command
 													if [ $? -eq 0 ]
 													then
 														case $task_edit_input in
 															1|2|3|4|5)
-																if [ $task_edit_input -eq 1 -o $task_edit_input -eq 3 -o $task_edit_input -eq 4 ]
+																if [ $task_edit_input -eq 1 || $task_edit_input -eq 3 || $task_edit_input -eq 4 ]
 																then
-																#Reading input for replace variable
 																	replace=$(zenity --entry \
 																		--title="Replace Text" \
 																		--text="Enter replacing text:" )
 																else
 																	replace=$(zenity --calendar \
-																		--title="Replace Date" \
+																		--title="Replace Start Date" \
 																		--text="Choose replacing date:" )
 																fi
-																#Performing the replace operation
 																for((i=1;i<=5;i++))
 																do
 																	if [ $i -eq $task_edit_input ]
 																	then
 																		echo $replace >> temp.txt
-																	else
-																		cut -d \| -f $i $name.txt >> temp.txt
 																	fi
+																	cut -d \| -f $i $name.txt >> temp.txt
 																done
 																tr '\n' '|' < temp.txt | cat > $name.txt
 																rm temp.txt
@@ -391,12 +367,6 @@ do
 														esac
 													else
 														task_edit_input=1
-														zenity --error \
-															--title="ERROR!" \
-															--text="An error has occurred!" \
-															--width=300 \
-															--height=100 \
-															--timeout=5
 													fi
 												done
 											else
@@ -417,16 +387,13 @@ do
 										fi
 									;;
 									3)
-										#Reading input for name
 										name=$(zenity --entry \
 											--title="Remove Task" \
 											--text="Enter Task Name:" \
-											--width=300 \
-											--height=100 )
-										#Checking exit status of the previous command
+											--width="300" \
+											--height="300" )
 										if [ $? -eq 0 -a ${#name} -ne 0 ]
 										then
-											#Checking if the corresponding task exists and deleting the task
 											ls $name.txt
 											if [ $? -eq 0 ]
 											then
@@ -449,7 +416,6 @@ do
 										fi
 										;;
 									4)
-										#Checking if folder is empty
 										if [ $(ls | wc -l) -eq 0 ]
 										then
 											zenity --error \
@@ -459,25 +425,23 @@ do
 												--height=100 \
 												--timeout=5
 										else
+											ls | cat > list
 											zenity --list \
 												--title="List" \
 												--text="The list of tasks" \
 												--column="Number" \
 												--column="Task" \
-												$(ls | nl)
+												$(nl list)
 										fi
 										;;
 									5)
-										#Reading input for name variable
 										name=$(zenity --entry \
 											--title="Search Task" \
 											--text="Enter Task Name:" )
-										#Checking exit status code of the previous command
 										if [ $? -eq 0 ]
 										then	
 											if [ ${#name} -ne 0 ]
 											then
-												#Checking if the corresponding task exists
 												ls $name.txt
 												if [ $? -eq 0 ]
 												then
@@ -507,52 +471,10 @@ do
 												--title="Error!" \
 												--text="An error has occurred!" \
 												--width=300 \
-												--height=100 \
-												--timeout=5
+												--height=300 
 										fi
 										;;
 									6)
-										if [ $(ls | wc -l) -ne 0 ]
-										then
-											#Reading input for name variable
-											name=$(zenity --list \
-												--title="Display" \
-												--text="Choose the task you want to display:" \
-												--column="Task" \
-												$(ls))
-											#Checking exit status code of the previous command
-											if [ $? -eq 0 -a ${#name} -ne 0 ]
-											then
-												#Performing the corresponding display operation
-												tr '|' '\n' < $name | cat > temp.txt
-												paste -d '\t' ./../taskattribute temp.txt > templist
-												zenity --list \
-													--title="Member Details" \
-													--column="Attributes" \
-													--column="Values" \
-													--width=300 \
-													--height=300 \
-													$(tr '\t ' ' _' < templist)	 
-												rm temp.txt
-												rm templist
-											else
-												zenity --error \
-													--title="ERROR!" \
-													--text="An error has occurred!" \
-													--width=300 \
-													--height=100 \
-													--timeout=5
-											fi
-										else
-											zenity --info \
-												--title="INFO!" \
-												--text="Chosen Member has no task to do!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
-										fi
-										;;
-									7)
 										zenity --info \
 											--title="Exiting" \
 											--text="Thank You!" \
@@ -577,7 +499,7 @@ do
 								--title="ERROR!" \
 								--text="An error has occurred!" \
 								--width=300 \
-								--height=100 \
+								--height=300 \
 								--timeout=5
 						fi
 						if [ $flag = 1 ]
@@ -587,28 +509,25 @@ do
 						fi
 						;;
 					2)
-						#Reading input for name variable
 						name=$(zenity --entry \
 							--title="Search Member" \
 							--text="Enter Member Name:" \
-							--width=300 \
-							--height=100 )
-						#Checking exit status code of the previous command
+							--width="300" \
+							--height="300" )
 						if [ $? -eq 0 -a ${#name} -ne 0 ]
 						then
-							#Checking if the Member exists
 							num=$(cut -d \| -f 1 file.txt | grep $name | wc -l)
 							if [ $num -eq 0 ]
 							then
 								zenity --info \
-									--title="Searching Member" \
+									--title="Searching Task" \
 									--text="$name member does not exist!" \
 									--width=300 \
 									--height=100 \
 									--timeout=5
 							else
 								zenity --info \
-									--title="Searching Member" \
+									--title="Searching Task" \
 									--text="$name member exists!" \
 									--width=300 \
 									--height=100 \
@@ -624,7 +543,6 @@ do
 						fi 
 						;;
 					3)
-						#Performing operations to display Members along with their IDs
 						ls -l | grep "^d" | tr -s " " | cut -d " " -f 9,10 | cat > list
 						zenity --list \
 								--title="List" \
@@ -655,7 +573,7 @@ do
 				esac
 			done
 			;;
-		5)
+		6)
 			zenity --info \
 				--title="Bye!" \
 				--text="Thank You for using the E-governance system" \

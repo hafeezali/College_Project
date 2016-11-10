@@ -12,6 +12,16 @@ del_disp_sel() {
 	cut -d \| -f 1 file.txt | paste id_file - >> id_name.csv
 }
 
+#function to print all errors
+z_err() {
+	zenity --error \
+		--title=$1 \
+		--text=$2 \
+		--width=300 \
+		--height=100 \
+		--timeout=5
+}
+
 #Welcome Dialog
 zenity --info \
 	--title="E-governance" \
@@ -97,10 +107,7 @@ do
 						--timeout=5
 					;;
 				-1)
-					zenity --error \
-						--title="ERROR!" \
-						--text="An unexpected error has occurred!" \
-						--timeout=5
+					z_err "ERROR!" "An unexpected error has occurred!"
 					;;
 			esac
 			;;
@@ -147,28 +154,13 @@ do
 						--height=100 \
 						--timeout=5
 				else
-					zenity --error \
-						--title="ERROR!" \
-						--text="An error has occured!" \
-						--width=300 \
-						--height=100 \
-						--timeout=5
+					z_err "ERROR!" "An error has occured!"
 				fi
 			elif [ $? == 1 ]
 			then
-				zenity --error \
-					--title="ERROR!" \
-					--text="No member selected!" \
-					--width=300 \
-					--height=100 \
-					--timeout=5
+				z_err "ERROR!" "No member selected!"
 			else
-				zenity --error \
-					--title="ERROR!" \
-					--text="An error has occurred!" \
-					--width=300 \
-					--height=100 \
-					--timeout=5
+				z_err "ERROR!" "An error has occurred!"
 			fi
 			;;
 		3)
@@ -194,12 +186,7 @@ do
 					--column="Values" \
 					$(tr '\n\t' ' ' < templist1)
 			else
-				zenity --error \
-					--title="ERROR!" \
-					--text="An error has occurred!" \
-					--width=300 \
-					--height=100 \
-					--timeout=5
+				z_err "ERROR!" "An error has occurred!"
 			fi	
 			;;
 		4)
@@ -297,19 +284,11 @@ do
 														--timeout=5
 													;;
 												-1)
-													zenity --error \
-														--title="ERROR!" \
-														--text="An unexpected error has occurred!" \
-														--timeout=5
+													z_err "ERROR!" "An unexpected error has occurred!"
 													;;
 											esac
 										else
-											zenity --error \
-												--title="Error!" \
-												--text="An error has occurred!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
+											z_err "ERROR!" "An error has occurred!"
 										fi
 										;;
 									2)
@@ -379,24 +358,14 @@ do
 																	--timeout=5
 																;;
 															*)
-																zenity --error \
-																	--title="ERROR!" \
-																	--text="No option selected!" \
-																	--width=300 \
-																	--height=100 \
-																	--timeout=5
+																z_err "ERROR!" "No option selected!"
 																#if no option is selected then white space is stored in input
 																task_edit_input=0
 																;;
 														esac
 													else
 														task_edit_input=1
-														zenity --error \
-															--title="ERROR!" \
-															--text="An error has occurred!" \
-															--width=300 \
-															--height=100 \
-															--timeout=5
+														z_err "ERROR!" "An error has occurred!"
 													fi
 												done
 											else
@@ -408,12 +377,7 @@ do
 													--timeout=5
 											fi
 										else
-											zenity --error \
-												--title="ERROR!" \
-												--text="An error has occurred!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
+											z_err "ERROR!" "An error has occurred!"
 										fi
 									;;
 									3)
@@ -440,24 +404,14 @@ do
 													--timeout=5
 											fi
 										else
-											zenity --error \
-												--title="Error!" \
-												--text="An error has occurred!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
+											z_err "ERROR!" "An error has occurred!"
 										fi
 										;;
 									4)
 										#Checking if folder is empty
 										if [ $(ls | wc -l) -eq 0 ]
 										then
-											zenity --error \
-												--title="ERROR!" \
-												--text="Task list empty!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
+											z_err "ERROR!" "Task list empty!"
 										else
 											zenity --list \
 												--title="List" \
@@ -496,19 +450,10 @@ do
 														--timeout=5
 												fi
 											else
-												zenity --error \
-													--title="Error" \
-													--text="No name entered" \
-													--width=300 \
-													--height=100
+												z_err "Error" "No name entered"
 											fi
 										else
-											zenity --error \
-												--title="Error!" \
-												--text="An error has occurred!" \
-												--width=300 \
-												--height=100 \
-												--timeout=5
+											z_err "Error!" "An error has occurred!"
 										fi
 										;;
 									6)
@@ -536,12 +481,7 @@ do
 												rm temp.txt
 												rm templist
 											else
-												zenity --error \
-													--title="ERROR!" \
-													--text="An error has occurred!" \
-													--width=300 \
-													--height=100 \
-													--timeout=5
+												z_err "Error!" "An error has occurred!"
 											fi
 										else
 											zenity --info \
@@ -561,24 +501,14 @@ do
 											--timeout=5
 										;;
 									*)
-										zenity --error \
-											--title="ERROR!" \
-											--text="No option selected!" \
-											--width=300 \
-											--height=100 \
-											--timeout=5
+										z_err "ERROR!" "No option selected!"
 										#if no option is selected then white space is stored in input
 										task_load_input=0
 										;;
 								esac
 							done
 						else
-							zenity --error \
-								--title="ERROR!" \
-								--text="An error has occurred!" \
-								--width=300 \
-								--height=100 \
-								--timeout=5
+							z_err "Error!" "An error has occurred!"
 						fi
 						if [ $flag = 1 ]
 						then
@@ -615,12 +545,7 @@ do
 									--timeout=5
 							fi
 						else
-							zenity --error \
-								--title="Error!" \
-								--text="An error has occurred!" \
-								--width=300 \
-								--height=100 \
-								--timeout=5
+							z_err "Error!" "An error has occurred!"
 						fi 
 						;;
 					3)
@@ -643,12 +568,7 @@ do
 							--timeout=5
 						;;
 					*)
-						zenity --error \
-							--title="ERROR!" \
-							--text="No option selected!" \
-							--width=300 \
-							--height=100 \
-							--timeout=5
+						z_err "Error!" "No option selected!"
 						#if no option is selected then white space is stored in input
 						task_input=0
 						;;
@@ -664,12 +584,7 @@ do
 				--timeout=5
 			;;
 		*)
-			zenity --error \
-				--title="ERROR!" \
-				--text="No option selected!" \
-				--width=300 \
-				--height=100 \
-				--timeout=5
+			z_err "Error!" "No option selected!"
 			#if no option is selected then white space is stored in input
 			input=0
 			;;
