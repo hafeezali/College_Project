@@ -264,28 +264,34 @@ do
 										#Checking exit status of the previous command
 										if [ $? -eq 0 -a ${#name} -ne 0 ]
 										then
-											#Form for Task info
-											zenity --forms \
-												--title="$name" \
-												--text="Enter information about the task:" \
-												--separator="|" \
-												--add-entry="Description in few words:" \
-												--add-calendar="Start Date:" \
-												--add-entry="Status:" \
-												--add-entry="Priority:" \
-												--add-calendar="Due Date:" >> $name.txt
-											#Checking the exit status
-											case $? in
-												0) 
-													z_info "Task added!" "$name task has been added!"
-													;;
-												1)
-													z_war "WARNING!" "No task was added!"
-													;;
-												-1)
-													z_err "ERROR!" "An unexpected error has occurred!"
-													;;
-											esac
+											ls $name.txt
+											if [ $? -ne 0 ]
+											then
+												#Form for Task info
+												zenity --forms \
+													--title="$name" \
+													--text="Enter information about the task:" \
+													--separator="|" \
+													--add-entry="Description in few words:" \
+													--add-calendar="Start Date:" \
+													--add-entry="Status:" \
+													--add-entry="Priority:" \
+													--add-calendar="Due Date:" >> $name.txt
+												#Checking the exit status
+												case $? in
+													0) 
+														z_info "Task added!" "$name task has been added!"
+														;;
+													1)
+														z_war "WARNING!" "No task was added!"
+														;;
+													-1)
+														z_err "ERROR!" "An unexpected error has occurred!"
+														;;
+												esac
+											else
+												z_info "INFO" "$name task already exists!"
+											fi
 										else
 											z_err "ERROR!" "An error has occurred!"
 										fi
