@@ -72,6 +72,8 @@ do
 	input=$(zenity --list \
 		--title="Menu:" \
 		--text="Choose an Option:" \
+		--width=300 \
+		--height=250 \
 		--column="Choice" \
 		--column="Description" \
 		1 Add \
@@ -142,6 +144,8 @@ do
 			id=$(zenity --list \
 				--title="Delete Member" \
 				--text="Choose the member whose data must be deleted:" \
+				--width=300 \
+				--height=250 \
 				--column="I.D." \
 				--column="Name" \
 				$(tr '\n\t' '  ' < id_name.csv))
@@ -179,6 +183,8 @@ do
 			id=$(zenity --list \
 			--title="Select Member" \
 			--text="Choose the member you want to select:" \
+			--width=300 \
+			--height=250 \
 			--column="I.D." \
 			--column="Name" \
 			$(tr '\n\t' '  ' < id_name.csv))
@@ -207,6 +213,8 @@ do
 				task_input=$(zenity --list \
 					--title="Tasks Menu:" \
 					--text="Choose an Option:" \
+					--width=300 \
+					--height=250 \
 					--column="Choice" \
 					--column="Description" \
 					1 Load \
@@ -227,6 +235,8 @@ do
 						id=$(zenity --list \
 							--title="Load Member" \
 							--text="Choose the member whose tasks must be updated:" \
+							--width=300 \
+							--height=250 \
 							--column="I.D." \
 							--column="Name" \
 							$(tr '\n\t' '  ' < id_name.csv))
@@ -243,6 +253,8 @@ do
 								task_load_input=$(zenity --list \
 									--title="Tasks Load Menu:" \
 									--text="Choose an option:" \
+									--width=300 \
+									--height=300 \
 									--column="Choice" \
 									--column="Option" \
 									1 Add_task \
@@ -313,6 +325,8 @@ do
 													task_edit_input=$(zenity --list \
 														--title="Tasks Edit Menu:" \
 														--text="Choose an option:" \
+														--width=300 \
+														--height=250 \
 														--column="Choice" \
 														--column="Option" \
 														1 Edit_Description \
@@ -498,6 +512,8 @@ do
 						zenity --list \
 								--title="List" \
 								--text="The list of Members and their IDs:" \
+								--width=300 \
+								--height=250 \
 								--column="Number" \
 								--column="ID" \
 								--column="Name" \
