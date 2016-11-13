@@ -125,7 +125,7 @@ do
 					echo $id >> id_file
 					#retrieving the name of the member
 					num=$(grep -n $id id_file | cut -d : -f1)
-					name=$(sed -n ""$num"p" file.txt | cut -d \| -f2 )
+					name=$(sed -n ""$num"p" file.txt | cut -d \| -f1 )
 					z_info "Member added!" "Member I.D. : $id"
 					#Making the Member folder which holds the various tasks to be done by the member
 					mkdir "$id $name"
@@ -454,7 +454,8 @@ do
 												tr '|' '\n' < $name | cat > temp.txt
 												paste -d '\t' ./../taskattribute temp.txt > templist
 												zenity --list \
-													--title="Member Details" \
+													--title="Task Details" \
+													--text="Details Of the Task" \
 													--column="Attributes" \
 													--column="Values" \
 													--width=300 \
