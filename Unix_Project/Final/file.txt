@@ -2,4 +2,4 @@ Hafeez|Ali|Anees Ali|Khyrunnisa|hafeez.ali5@gmail.com|Bangalore|Indian|740622995
 Rahul|Mogambo|RahulFather|RahulMother|Rahul@rahul.com|Bangalore|Indian|1234567890|A+|03/11/97
 Aditya|Jayasimha|AdityaFather|AdityaMother|Aditya@aditya.com|Bangalore|Indian|6758490321|B-|25/08/97
 Sanjay|Sanj|SanjayFather|SanjayMother|Sanjay@Sanjay.com|Bangalore|Indian|5674893021|O+|23/07/97
-Sharath|Savasere|SharathFather|SharathMother|Sharath@Shartah.com|Bangalore|Indian|8907651423|A-|28/11/97
+Deepti|L|A|A|a.com|Sur|india|283835055|b+vw|13/11/16
